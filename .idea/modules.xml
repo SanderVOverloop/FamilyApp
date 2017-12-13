@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/FamilyApp.iml" filepath="$PROJECT_DIR$/FamilyApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:\Users\shado\Desktop\FamilyApp\app\app.iml" filepath="C:\Users\shado\Desktop\FamilyApp\app\app.iml" />
     </modules>
   </component>
 </project>
