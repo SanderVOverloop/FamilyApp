@@ -17,7 +17,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".HomeActivity" />
-        <activity android:name=".KomenEtenActivity"></activity>
+        <activity android:name=".KomenEtenActivity" />
+        <activity android:name=".SignUpActivity"></activity>
     </application>
 
 </manifest>
