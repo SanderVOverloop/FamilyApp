@@ -15,4 +15,8 @@ public class HomeActivity extends AppCompatActivity {
     public void onClickKomenEten(View view){
         startActivity(new Intent(this, KomenEtenActivity.class));
     }
+
+    public void onClickBoodschappenLijst(View view){
+        startActivity(new Intent(this, BoodschappenlijstActivity.class));
+    }
 }
