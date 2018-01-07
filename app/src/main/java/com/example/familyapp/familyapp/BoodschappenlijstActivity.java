@@ -1,5 +1,6 @@
 package com.example.familyapp.familyapp;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,10 +17,11 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class BoodschappenlijstActivity extends AppCompatActivity {
+public class BoodschappenlijstActivity extends AppCompatActivity implements View.OnClickListener {
     DatabaseReference dref;
     ListView listview;
     ArrayList<String> list=new ArrayList<>();
+    EditText product;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,30 +30,37 @@ public class BoodschappenlijstActivity extends AppCompatActivity {
         listview = (ListView)findViewById(R.id.listview);
         final ArrayAdapter<String> adapter= new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line,list);
         listview.setAdapter(adapter);
-        dref = FirebaseDatabase.getInstance().getReference();
-        dref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                String value = dataSnapshot.getValue(String.class);
-                Log.d("1", "Value is: " + value);
-            }
 
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w("1", "Failed to read value.", error.toException());
-            }
-        });
+        dref = FirebaseDatabase.getInstance().getReference("Boodschappenlijst");
 
-
+        findViewById(R.id.btn_add).setOnClickListener(this);
     }
 
-    public void btnClick(View view){
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("message");
-
-        myRef.setValue("Hello, World!");
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.btn_add:
+                btnClick();
+                break;
+        }
     }
+
+
+
+    public void btnClick(){
+        String productname = product.getText().toString().trim();
+
+        if(productname.isEmpty()){
+            product.setError("Please enter a product");
+            product.requestFocus();
+        }
+        else {
+            String id = dref.push().getKey();
+            Boodschappen boodschappen = new Boodschappen(id,productname);
+            dref.child(id).setValue(id,productname);
+
+        }
+    }
+
+
 }
