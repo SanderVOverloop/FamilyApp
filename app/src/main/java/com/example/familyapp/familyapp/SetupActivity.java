@@ -11,15 +11,20 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class SetupActivity extends AppCompatActivity implements View.OnClickListener {
     EditText inputfamily;
+    String familyid = "-L2GyIAvj5tTQQPUY31j";
 
-    DatabaseReference databaseReference;
+    public final static String FAMILY_ID = "id";
+
+    DatabaseReference databaseFamily;
+    DatabaseReference databaseLeden;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setup);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("FamilyGroup");
+        databaseFamily = FirebaseDatabase.getInstance().getReference("FamilyGroup");
 
         inputfamily = findViewById(R.id.input_family);
 
@@ -34,26 +39,41 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 CreateFamily();
                 break;
             case R.id.joinfamily:
-                startActivity(new Intent(this, HomeActivity.class));
+                startActivity(new Intent(this, JoinActivity.class));
                 break;
         }
     }
 
     private void CreateFamily() {
-        String name = inputfamily.getText().toString().trim();
+        String familyname = inputfamily.getText().toString().trim();
 
-        if(name.isEmpty()){
+        if(familyname.isEmpty()){
             inputfamily.setError("Please enter a FamilyGroupName");
             inputfamily.requestFocus();
             return;
         }
         else{
-            String id = databaseReference.push().getKey();
-            FamilyGroup familyGroup = new FamilyGroup(id, name);
+            familyid = databaseFamily.push().getKey();
+            FamilyGroup familyGroup = new FamilyGroup(familyid, familyname);
 
-            databaseReference.child(id).setValue(familyGroup);
+            Intent intent = getIntent();
+            String lidid = intent.getStringExtra(SignUpActivity.LEDEN_ID);
+            String lidname = intent.getStringExtra(SignUpActivity.LEDEN_NAAM);
+            String lidemail = intent.getStringExtra(SignUpActivity.LEDEN_EMAIL);
+            Leden lid = new Leden(lidid, lidname, lidemail);
 
-            startActivity(new Intent(this, HomeActivity.class));
+            databaseFamily.child(familyid).setValue(familyGroup);
+
+            databaseLeden = FirebaseDatabase.getInstance().getReference("Leden").child("-L2GyIAvj5tTQQPUY31j");
+            databaseLeden.child(lidid).removeValue();
+
+            databaseLeden = FirebaseDatabase.getInstance().getReference("Leden").child(familyid);
+            databaseLeden.child(lidid).setValue(lid);
+
+            intent = new Intent(this, HomeActivity.class);
+            intent.putExtra(FAMILY_ID, familyid);
+
+            startActivity(intent);
         }
     }
 }
