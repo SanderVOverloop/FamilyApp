@@ -11,7 +11,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class SetupActivity extends AppCompatActivity implements View.OnClickListener {
     EditText inputfamily;
-    String familyid = "-L2H5sFl0lGqFXNadYo7";
+    String familyid = "-L2GyIAvj5tTQQPUY31j";
+
+    public final static String FAMILY_ID = "id";
 
     DatabaseReference databaseFamily;
     DatabaseReference databaseLeden;
@@ -68,7 +70,10 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
             databaseLeden = FirebaseDatabase.getInstance().getReference("Leden").child(familyid);
             databaseLeden.child(lidid).setValue(lid);
 
-            startActivity(new Intent(this, HomeActivity.class));
+            intent = new Intent(this, HomeActivity.class);
+            intent.putExtra(FAMILY_ID, familyid);
+
+            startActivity(intent);
         }
     }
 }

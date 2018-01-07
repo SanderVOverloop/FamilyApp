@@ -30,12 +30,17 @@ public class BoodschappenlijstActivity extends AppCompatActivity {
     private ArrayList<String> arrayList = new ArrayList<>();
     private ArrayAdapter<String> adapter;
 
+    private String id = "-L2GyIAvj5tTQQPUY31j";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_boodschappenlijst);
 
-        dref = FirebaseDatabase.getInstance().getReference("Boodschappenlijst");
+        Intent intent = getIntent();
+        id = intent.getStringExtra(HomeActivity.FAMILY_ID);
+
+        dref = FirebaseDatabase.getInstance().getReference("Boodschappenlijst").child(id);
 
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayList);
 
