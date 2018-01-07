@@ -15,12 +15,18 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener{
 
-    EditText inputEmail, inputPassword;
-    private FirebaseAuth mAuth;
+    EditText inputName, inputEmail, inputPassword;
+    FirebaseAuth mAuth;
     ProgressBar progressBar;
+    DatabaseReference databaseReference;
+    public final static String LEDEN_ID = "id";
+    public final static String LEDEN_NAAM = "name";
+    public final static String LEDEN_EMAIL = "email";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +36,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         inputEmail = (EditText) findViewById(R.id.input_email);
         inputPassword = (EditText) findViewById(R.id.input_password);
         progressBar = (ProgressBar) findViewById(R.id.signupprogressBar);
+        inputName = (EditText) findViewById(R.id.input_name);
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("Leden").child("-L2GyIAvj5tTQQPUY31j");
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -47,8 +56,15 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     }*/
 
     private void RegisterUser(){
-        String email = inputEmail.getText().toString().trim();
+        final String name = inputName.getText().toString().trim();
+        final String email = inputEmail.getText().toString().trim();
         String password = inputPassword.getText().toString().trim();
+
+        if(name.isEmpty()){
+            inputName.setError("Please enter a name");
+            inputName.requestFocus();
+            return;
+        }
 
         if(email.isEmpty()){
             inputEmail.setError("Email is required");
@@ -83,8 +99,17 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 progressBar.setVisibility(View.GONE);
 
                 if(task.isSuccessful()){
+
+                    //word lid aangemaakt in de groep default?
+                    String id = databaseReference.push().getKey();
+                    Leden lid = new Leden(id,name,email);
+                    databaseReference.child(id).setValue(lid);
+
                     Toast.makeText(getApplicationContext(), "User Registered Succesful", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(SignUpActivity.this, HomeActivity.class);
+                    Intent intent = new Intent(SignUpActivity.this, SetupActivity.class);
+                    intent.putExtra(LEDEN_ID, id);
+                    intent.putExtra(LEDEN_NAAM, name);
+                    intent.putExtra(LEDEN_EMAIL, email);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                 }
