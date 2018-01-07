@@ -9,4 +9,5 @@ public class Boodschappen {
         this.id = id;
         this.name = name;
     }
+    public Boodschappen(){}
 }
