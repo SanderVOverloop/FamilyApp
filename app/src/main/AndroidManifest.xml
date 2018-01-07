@@ -39,6 +39,8 @@
         </service>
 
         <activity android:name=".BoodschappenlijstActivity"></activity>
-    </application>
 
+        <activity android:name=".SetupActivity"></activity>
+
+    </application>
 </manifest>
