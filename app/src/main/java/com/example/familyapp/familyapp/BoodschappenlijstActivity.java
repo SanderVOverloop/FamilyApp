@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import com.google.firebase.database.ChildEventListener;
@@ -16,51 +17,71 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class BoodschappenlijstActivity extends AppCompatActivity implements View.OnClickListener {
-    DatabaseReference dref;
-    ListView listview;
-    ArrayList<String> list=new ArrayList<>();
-    EditText product;
+public class BoodschappenlijstActivity extends AppCompatActivity {
+
+    private DatabaseReference dref;
+
+    private ListView listview;
+    private EditText editText;
+    private Button button;
+
+    private ArrayList<String> arrayList = new ArrayList<>();
+    private ArrayAdapter<String> adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_boodschappenlijst);
 
-        listview = (ListView)findViewById(R.id.listview);
-        final ArrayAdapter<String> adapter= new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line,list);
-        listview.setAdapter(adapter);
-
         dref = FirebaseDatabase.getInstance().getReference("Boodschappenlijst");
 
-        findViewById(R.id.btn_add).setOnClickListener(this);
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayList);
+
+        editText = (EditText)findViewById(R.id.txt_add);
+        listview = (ListView)findViewById(R.id.listview);
+        button = (Button) findViewById(R.id.btn_add);
+
+        listview.setAdapter(adapter);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dref.push().setValue(editText.getText().toString());
+            }
+        });
+
+        dref.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                String string = dataSnapshot.getValue(String.class);
+                arrayList.add(string);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.btn_add:
-                btnClick();
-                break;
-        }
-    }
-
-
-
-    public void btnClick(){
-        String productname = product.getText().toString().trim();
-
-        if(productname.isEmpty()){
-            product.setError("Please enter a product");
-            product.requestFocus();
-        }
-        else {
-            String id = dref.push().getKey();
-            Boodschappen boodschappen = new Boodschappen(id,productname);
-            dref.child(id).setValue(id,productname);
-
-        }
-    }
-
 
 }
