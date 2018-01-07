@@ -3,4 +3,29 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        android:textSize="20sp"
+        android:text="Product toevoegen" />
+
+    <EditText
+        android:id="@+id/etProduct"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Product"
+        android:layout_marginTop="10dp"
+        android:inputType="textPersonName" />
+
+    <Button
+        android:id="@+id/btn_toevoegen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Toevoegen" />
 </LinearLayout>
