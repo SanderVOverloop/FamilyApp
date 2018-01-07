@@ -6,24 +6,32 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Set;
 
 public class JoinActivity extends AppCompatActivity implements View.OnClickListener {
     EditText inputfamilyid;
+    String familyid = "-L2GyIAvj5tTQQPUY31j";
 
-    DatabaseReference databaseReference;
+    public final static String FAMILY_ID = "id";
+
+    DatabaseReference databaseFamily;
+    DatabaseReference databaseLeden;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setup);
+        setContentView(R.layout.activity_join);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("FamilyGroup");
+        databaseFamily = FirebaseDatabase.getInstance().getReference("FamilyGroup");
 
-        inputfamilyid = findViewById(R.id.input_family);
+        inputfamilyid = findViewById(R.id.input_familyid);
 
         findViewById(R.id.btn_joinfamily).setOnClickListener(this);
         findViewById(R.id.createfamily).setOnClickListener(this);
@@ -33,29 +41,39 @@ public class JoinActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.btn_joinfamily:
-                CreateFamily();
+                JoinFamily();
                 break;
             case R.id.createfamily:
-                startActivity(new Intent(this, SetupActivity.class));
+                startActivity(new Intent(this, JoinActivity.class));
                 break;
         }
     }
 
-    private void CreateFamily() {
-        String name = inputfamilyid.getText().toString().trim();
+    private void JoinFamily() {
+        familyid = inputfamilyid.getText().toString().trim();
 
-        if(name.isEmpty()){
+        if(familyid.isEmpty()){
             inputfamilyid.setError("Please enter a FamilyGroupID");
             inputfamilyid.requestFocus();
             return;
         }
         else{
-            String id = databaseReference.push().getKey();
-            FamilyGroup familyGroup = new FamilyGroup(id, name);
 
-            databaseReference.child(id).setValue(familyGroup);
+            Intent intent = getIntent();
+            String lidid = intent.getStringExtra(SetupActivity.LEDEN_ID);
+            String lidname = intent.getStringExtra(SignUpActivity.LEDEN_NAAM);
+            String lidemail = intent.getStringExtra(SignUpActivity.LEDEN_EMAIL);
+            Leden lid = new Leden(lidid, lidname, lidemail);
 
-            startActivity(new Intent(this, HomeActivity.class));
+            databaseLeden = FirebaseDatabase.getInstance().getReference("Leden").child("-L2GyIAvj5tTQQPUY31j");
+            databaseLeden.child(lidid).removeValue();
+
+            databaseLeden = FirebaseDatabase.getInstance().getReference("Leden").child(familyid);
+            databaseLeden.child(lidid).setValue(lid);
+
+            intent = new Intent(this, HomeActivity.class);
+
+            startActivity(intent);
         }
     }
 }

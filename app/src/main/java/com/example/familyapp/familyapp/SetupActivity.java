@@ -13,11 +13,17 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     EditText inputfamily;
     String familyid = "-L2GyIAvj5tTQQPUY31j";
 
-    public final static String FAMILY_ID = "id";
+    public final static String LEDEN_ID = "id";
+    public final static String LEDEN_NAAM = "name";
+    public final static String LEDEN_EMAIL = "email";
 
     DatabaseReference databaseFamily;
     DatabaseReference databaseLeden;
 
+    Intent intent;
+    String lidid ;
+    String lidname;
+    String lidemail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +36,11 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
 
         findViewById(R.id.btn_createfamily).setOnClickListener(this);
         findViewById(R.id.joinfamily).setOnClickListener(this);
+
+        intent = getIntent();
+        lidid = intent.getStringExtra(SignUpActivity.LEDEN_ID);
+        lidname = intent.getStringExtra(SignUpActivity.LEDEN_NAAM);
+        lidemail = intent.getStringExtra(SignUpActivity.LEDEN_EMAIL);
     }
 
     @Override
@@ -39,7 +50,11 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 CreateFamily();
                 break;
             case R.id.joinfamily:
-                startActivity(new Intent(this, JoinActivity.class));
+                intent = new Intent(this, JoinActivity.class);
+                intent.putExtra(LEDEN_ID, lidid);
+                intent.putExtra(LEDEN_NAAM, lidname);
+                intent.putExtra(LEDEN_EMAIL, lidemail);
+                startActivity(intent);
                 break;
         }
     }
@@ -56,10 +71,6 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
             familyid = databaseFamily.push().getKey();
             FamilyGroup familyGroup = new FamilyGroup(familyid, familyname);
 
-            Intent intent = getIntent();
-            String lidid = intent.getStringExtra(SignUpActivity.LEDEN_ID);
-            String lidname = intent.getStringExtra(SignUpActivity.LEDEN_NAAM);
-            String lidemail = intent.getStringExtra(SignUpActivity.LEDEN_EMAIL);
             Leden lid = new Leden(lidid, lidname, lidemail);
 
             databaseFamily.child(familyid).setValue(familyGroup);
@@ -71,7 +82,10 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
             databaseLeden.child(lidid).setValue(lid);
 
             intent = new Intent(this, HomeActivity.class);
-            intent.putExtra(FAMILY_ID, familyid);
+
+            intent.putExtra(LEDEN_ID, lidid);
+            intent.putExtra(LEDEN_NAAM, lidname);
+            intent.putExtra(LEDEN_EMAIL, lidemail);
 
             startActivity(intent);
         }
