@@ -19,12 +19,13 @@ import com.google.firebase.database.ValueEventListener;
 public class HomeActivity extends AppCompatActivity {
 
     public final static String FAMILY_ID = "id";
+    public final static String LID_ID = "id";
 
     FirebaseAuth mAuth;
 
     private String email;
     private String lidid;
-    private String id;
+    private String familyid;
     private Intent intent;
 
     DatabaseReference databaseReference;
@@ -46,14 +47,15 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot idSnapshot : dataSnapshot.getChildren()){
-                    String data1 = idSnapshot.getKey();
-                    //System.out.println("key : " + data1);
+                    String data = idSnapshot.getKey();
+                    //System.out.println("key : " + data);
                     for (DataSnapshot snapshot : idSnapshot.getChildren()){
-                        String data2 = snapshot.child("email").getValue(String.class);
-                        //System.out.println("email : " + data2);
-                        if(data2.equals(email)){
-                            id = data1;
-                            //System.out.println("Yeah");
+                        String datamail = snapshot.child("email").getValue(String.class);
+                        //System.out.println("email : " + datamail);
+                        if(datamail.equals(email)){
+                            familyid = data;
+                            lidid = snapshot.getKey();
+                            //System.out.println(lidid);
                         }
                     }
                 }
@@ -77,9 +79,16 @@ public class HomeActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.settings_profiel:
-                startActivity(new Intent(this, KomenEtenActivity.class));
+                intent = new Intent(this, ProfileActivity.class);
+                intent.putExtra(FAMILY_ID, familyid);
+                intent.putExtra(LID_ID, lidid);
+                System.out.println("fam: " + familyid);
+                System.out.println("lid: " + lidid);
+                startActivity(intent);
                 break;
             case R.id.settings_uitloggen:
+                mAuth.getInstance().signOut();
+                startActivity(new Intent(this, MainActivity.class));
                 break;
             default:
                 //error
@@ -93,7 +102,7 @@ public class HomeActivity extends AppCompatActivity {
 
     public void onClickBoodschappenLijst(View view){
         intent = new Intent(this, BoodschappenlijstActivity.class);
-        intent.putExtra(FAMILY_ID, id);
+        intent.putExtra(FAMILY_ID, familyid);
         startActivity(intent);
     }
 }

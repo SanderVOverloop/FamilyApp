@@ -18,14 +18,14 @@
         </activity>
         <activity
             android:name=".HomeActivity"
-            android:theme="@style/CustomToolbar"/>
+            android:theme="@style/CustomToolbar" />
         <activity android:name=".KomenEtenActivity" />
         <activity android:name=".SignUpActivity" />
         <activity
             android:name=".BoodschappenlijstActivity"
-            android:theme="@style/CustomToolbar"/>
-        <activity android:name=".SetupActivity"/>
-        <activity android:name=".JoinActivity"/>
+            android:theme="@style/CustomToolbar" />
+        <activity android:name=".SetupActivity" />
+        <activity android:name=".JoinActivity" />
 
         <!-- meta-data van firebase -->
         <meta-data
@@ -47,6 +47,7 @@
             </intent-filter>
         </service>
 
+        <activity android:name=".ProfileActivity"></activity>
     </application>
 
 </manifest>
