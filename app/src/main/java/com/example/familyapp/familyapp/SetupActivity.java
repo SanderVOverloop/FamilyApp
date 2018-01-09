@@ -54,6 +54,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 intent.putExtra(LEDEN_ID, lidid);
                 intent.putExtra(LEDEN_NAAM, lidname);
                 intent.putExtra(LEDEN_EMAIL, lidemail);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 break;
         }

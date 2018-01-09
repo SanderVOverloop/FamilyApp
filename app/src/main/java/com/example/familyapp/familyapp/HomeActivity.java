@@ -18,8 +18,8 @@ import com.google.firebase.database.ValueEventListener;
 
 public class HomeActivity extends AppCompatActivity {
 
-    public final static String FAMILY_ID = "id";
-    public final static String LID_ID = "id";
+    public final static String FAMILY_ID = "fam_id";
+    public final static String LID_ID = "lid_id";
 
     FirebaseAuth mAuth;
 
@@ -48,14 +48,13 @@ public class HomeActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot idSnapshot : dataSnapshot.getChildren()){
                     String data = idSnapshot.getKey();
-                    //System.out.println("key : " + data);
                     for (DataSnapshot snapshot : idSnapshot.getChildren()){
                         String datamail = snapshot.child("email").getValue(String.class);
                         //System.out.println("email : " + datamail);
                         if(datamail.equals(email)){
                             familyid = data;
                             lidid = snapshot.getKey();
-                            //System.out.println(lidid);
+                            System.out.println("key : " + data);
                         }
                     }
                 }
@@ -82,8 +81,7 @@ public class HomeActivity extends AppCompatActivity {
                 intent = new Intent(this, ProfileActivity.class);
                 intent.putExtra(FAMILY_ID, familyid);
                 intent.putExtra(LID_ID, lidid);
-                System.out.println("fam: " + familyid);
-                System.out.println("lid: " + lidid);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 break;
             case R.id.settings_uitloggen:
@@ -103,6 +101,7 @@ public class HomeActivity extends AppCompatActivity {
     public void onClickBoodschappenLijst(View view){
         intent = new Intent(this, BoodschappenlijstActivity.class);
         intent.putExtra(FAMILY_ID, familyid);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 }

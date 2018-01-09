@@ -20,10 +20,14 @@ public class ProfileActivity extends AppCompatActivity {
 
     Intent intent;
 
-    String name;// = "Kevin";
+    String name = "Kevin";
     String email;
-    String lidid;// = "-L2HGsNMR46_Qk5BTqTH";
-    String familyid;// = "-L2GyIAvj5tTQQPUY31j";
+    String lidid = "-L2HGsNMR46_Qk5BTqTH";
+    String familyid = "-L2GyIAvj5tTQQPUY31j";
+
+    TextView txtNaam;
+    TextView txtEmail;
+    EditText etxtFamID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,19 +38,27 @@ public class ProfileActivity extends AppCompatActivity {
         familyid = intent.getStringExtra(HomeActivity.FAMILY_ID);
         lidid = intent.getStringExtra(HomeActivity.LID_ID);
 
+        txtNaam = findViewById(R.id.profilename);
+        txtEmail = findViewById(R.id.profileemail);
+        etxtFamID = findViewById(R.id.profilefamilyid);
+
         mAuth = FirebaseAuth.getInstance();
         email = mAuth.getCurrentUser().getEmail();
-
-        System.out.println("email: " + email);
-        System.out.println("lidid: " + lidid);
-        System.out.println("familyid: " + familyid);
 
         databaseReference = FirebaseDatabase.getInstance().getReference("Leden").child(familyid);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot idSnapshot : dataSnapshot.getChildren()){
-                    name = idSnapshot.child("naam").getValue(String.class);
+                    String data = idSnapshot.getKey();
+                    System.out.println("ID: " + data);
+                    String data2 = idSnapshot.child("naam").getValue(String.class);
+                    System.out.println("Naam: " + data2);
+                    if (data.equals(lidid)){
+                        name = data2;
+                        System.out.println("lol");
+                        Display();
+                    }
                 }
             }
 
@@ -56,12 +68,10 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        TextView txtNaam = findViewById(R.id.profilename);
-        TextView txtEmail = findViewById(R.id.profileemail);
-        EditText etxtFamID = findViewById(R.id.profilefamilyid);
 
-        System.out.println("naam: " + name);
+    }
 
+    public void Display(){
         txtNaam.setText(name);
         txtEmail.setText(email);
         etxtFamID.setText(familyid);
