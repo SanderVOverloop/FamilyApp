@@ -18,12 +18,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     EditText inputEmail, inputPassword;
     FirebaseAuth mAuth;
     ProgressBar progressBar;
+    FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         findViewById(R.id.link_signup).setOnClickListener(this);
         findViewById(R.id.btn_login).setOnClickListener(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        user = mAuth.getCurrentUser();
+
+        if(user != null){
+            startActivity(new Intent(this, HomeActivity.class));
+        }
     }
 
     public void userLogin(){
