@@ -39,8 +39,17 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
 
         intent = getIntent();
         lidid = intent.getStringExtra(SignUpActivity.LEDEN_ID);
+        if(lidid.isEmpty()){
+            lidid = intent.getStringExtra(JoinActivity.LEDEN_ID);
+        }
         lidname = intent.getStringExtra(SignUpActivity.LEDEN_NAAM);
+        if(lidname.isEmpty()){
+            lidname = intent.getStringExtra(JoinActivity.LEDEN_NAAM);
+        }
         lidemail = intent.getStringExtra(SignUpActivity.LEDEN_EMAIL);
+        if (lidemail.isEmpty()){
+            lidemail = intent.getStringExtra(JoinActivity.LEDEN_EMAIL);
+        }
     }
 
     @Override
