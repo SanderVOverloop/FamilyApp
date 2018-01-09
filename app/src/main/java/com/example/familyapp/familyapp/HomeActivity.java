@@ -3,6 +3,10 @@ package com.example.familyapp.familyapp;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,6 +33,9 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.CustomToolbar);
+        setSupportActionBar(toolbar);
+
 
         mAuth = FirebaseAuth.getInstance();
         email = mAuth.getCurrentUser().getEmail();
@@ -58,6 +65,28 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.settings_profiel:
+                startActivity(new Intent(this, KomenEtenActivity.class));
+                break;
+            case R.id.settings_uitloggen:
+                break;
+            default:
+                //error
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     public void onClickKomenEten(View view){
         startActivity(new Intent(this, KomenEtenActivity.class));
     }
